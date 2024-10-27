@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "semicolon": [true, "always"],
+    "quotemark": [true, "single"],
+    "trailing-comma": [true, { "multiline": "always", "singleline": "never" }],
+    "interface-name": [true, "never-prefix"],
+    "max-line-length": [true, 120],
+    "variable-name": [true, "ban-keywords", "check-format"],
+    "no-console": [true, "log", "error"]
+  },
+  "defaultSeverity": "error",
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**",
+      "dist/**"
+    ]
+  }
+}
