@@ -1,6 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { GitClient } from '../../domain/abstractions';
 import { CodeRepository } from '../../domain/entities';
+import {
+  FetchRepositoryDetailsHandler,
+  FetchUserHandler,
+  FetchWebhooksHandler
+} from "./handlers/gitHubRepositoryDetailsHandler";
+import {FetchContentsHandler} from "./handlers/gitHubRepositoryDetailsHandler/FetchContentsHandler";
+import {FetchYAMLFileHandler} from "./handlers/gitHubRepositoryDetailsHandler/FetchYAMLFileHandler";
 
 export class GitHubClient implements GitClient {
   private readonly baseURL: string;
@@ -23,54 +30,30 @@ export class GitHubClient implements GitClient {
     token: string,
     repoName: string
   ): Promise<CodeRepository> {
-    let activeWebhooks: string[] = [];
+    const request = new RepositoryDetailsRequest(token, repoName);
 
-    const config: AxiosRequestConfig = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
+    const fetchUserHandler = new FetchUserHandler(this.baseURL);
+    const fetchRepoDetailsHandler = new FetchRepositoryDetailsHandler(this.baseURL);
+    const fetchContentsHandler = new FetchContentsHandler(this.baseURL);
+    const fetchYAMLFileHandler = new FetchYAMLFileHandler();
+    const fetchWebhooksHandler = new FetchWebhooksHandler(this.baseURL);
 
-    const userResponse = await axios.get(`${this.baseURL}/user`, config);
+    fetchUserHandler
+        .setNext(fetchRepoDetailsHandler)
+        .setNext(fetchContentsHandler)
+        .setNext(fetchYAMLFileHandler)
+        .setNext(fetchWebhooksHandler);
 
-    const repoResponse = await axios.get(
-      `${this.baseURL}/repos/${userResponse.data.login}/${repoName}`,
-      config
-    );
-    const repoData = repoResponse.data;
-
-    const contentsResponse = await axios.get(
-      `${this.baseURL}/repos/${userResponse.data.login}/${repoName}/contents`,
-      config
-    );
-    const files = contentsResponse.data;
-    const fileCount = files.length;
-
-    let ymlFileContent;
-    const ymlFile = files.find((file: any) => file.name.endsWith('.yml'));
-    if (ymlFile) {
-      const ymlFileResponse = await axios.get(ymlFile.download_url);
-      ymlFileContent = ymlFileResponse.data;
-    }
-
-    try {
-      const hooksResponse = await axios.get(
-        `${this.baseURL}/repos/${userResponse.data.login}/${repoName}/hooks`,
-        config
-      );
-
-      activeWebhooks = hooksResponse.data.map((hook: any) => hook.config.url);
-    } catch (e) {
-      // need to be discussed should we continue ot throw error when have no access to webhooks
-      console.error('Error fetching webhooks or have no access', e);
-    }
+    const result = await fetchUserHandler.handle(request);
 
     return new CodeRepository(
-      repoData.name,
-      repoData.size,
-      repoData.owner.login,
-      repoData.private,
-      fileCount,
-      ymlFileContent,
-      activeWebhooks
+        result.repoData.name,
+        result.repoData.size,
+        result.repoData.owner.login,
+        result.repoData.private,
+        result.files.length,
+        result.ymlFileContent,
+        result.activeWebhooks
     );
   }
 }
