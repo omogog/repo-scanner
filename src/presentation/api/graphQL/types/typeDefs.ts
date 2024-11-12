@@ -1,13 +1,13 @@
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server";
 
 export const typeDefs = gql`
-  type ListItemCodeRepository {
-    name: String
-    size: Int
-    owner: String
+  type RepositorySummary {
+    name: String!
+    size: Int!
+    owner: String!
   }
 
-  type CodeRepository {
+  type RepositoryDetails {
     name: String!
     size: Int!
     owner: String!
@@ -17,8 +17,13 @@ export const typeDefs = gql`
     activeWebhooks: [String]
   }
 
+  type PaginatedRepositorySummary {
+    items: [RepositorySummary]!
+    page: Int!
+  }
+
   type Query {
-    listRepositories: [ListItemCodeRepository]
-    getRepositoryDetails(repoName: String!): CodeRepository
+    listRepositories(page: Int): PaginatedRepositorySummary
+    getRepositoryDetails(repoName: String!): RepositoryDetails
   }
 `;

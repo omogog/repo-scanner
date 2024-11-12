@@ -1,10 +1,18 @@
-import { GitClient } from '../../domain/abstractions';
-import { CodeRepository } from '../../domain/entities';
+import { GitClient } from "../gitClients";
+import { Cache } from "../storages";;
+import { RepositorySummary } from "../../domain/entitities";
 
 export class ListRepositories {
-  constructor(private gitClient: GitClient) {}
+  constructor(
+      private gitClient: GitClient,
+      private cache: Cache<RepositorySummary[]>,
+  ) {}
 
-  async execute(token: string): Promise<CodeRepository[]> {
-    return this.gitClient.listRepositories(token);
+  async execute(token: string, page = 1): Promise<RepositorySummary[]> {
+    const cacheKey = `repos:page:${token}:${page}`;
+
+    return this.cache.getOrFetch(cacheKey, async () =>
+        this.gitClient.listRepositories(token, page)
+    );
   }
 }
