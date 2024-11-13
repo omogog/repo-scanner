@@ -10,6 +10,7 @@ This is a GitHub Scanner system built with TypeScript and Clean Architecture pri
 - **Caching**: Uses an in-memory cache to store results and reduce repeated API requests.
 - I’m not very familiar with GraphQL, so this might not be the best approach to implement it.
 - The implemented solution avoids race conditions and also addresses potential race conditions with concurrent cache requests.
+- The current implementation is designed to be as simple as possible, with scalability in mind. I aimed to use the minimum number of packages, following a clean architecture approach. For this implementation, I avoided using any external dependency injection containers; everything is done manually.
 ## Setup
 
 ### Prerequisites
