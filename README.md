@@ -22,8 +22,6 @@ This is a GitHub Scanner system built with TypeScript and Clean Architecture pri
 2. Install the dependencies:
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
 3. Create a `.env` file from the example file:
@@ -43,7 +41,7 @@ This is a GitHub Scanner system built with TypeScript and Clean Architecture pri
 ### Running the Server
 Start the Apollo GraphQL server:
 ```bash
-npm start
+npm run start
 ```
 
 The server should now be running on `http://localhost:4000`.
