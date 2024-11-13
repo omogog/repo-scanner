@@ -42,6 +42,7 @@ export class GitHubClient implements GitClient {
   private createAuthConfig(token: string, params: any = {}): any {
     return {
       headers: { Authorization: `Bearer ${token}` },
+      timeout: 5000,// settings of current client, so in that case not require to put it into constant or env file
       params,
     };
   }
