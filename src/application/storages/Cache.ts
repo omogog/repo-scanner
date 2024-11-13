@@ -4,5 +4,5 @@ export interface Cache<T> {
   has(key: string): boolean;
   delete(key: string): void;
   // this implementation need to avoid possible race condition when we have few requests to the same resource
-  getOrFetch(key: string, fetchFunction: () => Promise<T>): Promise<T>
+  getOrFetch(key: string, fetchFunction: () => Promise<T>): Promise<T>;
 }

@@ -1,4 +1,4 @@
-import { Cache } from "../../application/storages";
+import { Cache } from '../../application/storages';
 
 export class InMemoryCache<T> implements Cache<T> {
   private cache = new Map<string, { value: T; expiry: number }>();
@@ -19,14 +19,16 @@ export class InMemoryCache<T> implements Cache<T> {
     }
 
     if (!this.inFlightRequests.has(key)) {
-      const inFlight = fetchFunction().then((result) => {
-        this.set(key, result);
-        this.inFlightRequests.delete(key);
-        return result;
-      }).catch((error) => {
-        this.inFlightRequests.delete(key);
-        throw error;
-      });
+      const inFlight = fetchFunction()
+        .then((result) => {
+          this.set(key, result);
+          this.inFlightRequests.delete(key);
+          return result;
+        })
+        .catch((error) => {
+          this.inFlightRequests.delete(key);
+          throw error;
+        });
       this.inFlightRequests.set(key, inFlight);
     }
 

@@ -1,27 +1,27 @@
 export interface RepoOwner {
-    login: string;
+  login: string;
 }
 
 export interface RepoData {
-    name: string;
-    size: number;
-    owner: RepoOwner;
-    private: boolean;
+  name: string;
+  size: number;
+  owner: RepoOwner;
+  private: boolean;
 }
 
 export interface ContentFile {
-    name: string;
-    download_url: string;
+  name: string;
+  download_url: string;
 }
 
 export interface WebhookConfig {
-    url: string;
+  url: string;
 }
 
 export interface Webhook {
-    config: WebhookConfig;
+  config: WebhookConfig;
 }
 
 export interface UserData {
-    login: string;
+  login: string;
 }
