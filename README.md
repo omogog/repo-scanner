@@ -8,7 +8,8 @@ This is a GitHub Scanner system built with TypeScript and Clean Architecture pri
 ## Key Features
 - **Concurrency Control**: Limits the number of concurrent requests when fetching repository details to avoid overloading the GitHub API.
 - **Caching**: Uses an in-memory cache to store results and reduce repeated API requests.
-
+- I’m not very familiar with GraphQL, so this might not be the best approach to implement it.
+- The implemented solution avoids race conditions and also addresses potential race conditions with concurrent cache requests.
 ## Setup
 
 ### Prerequisites
